@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import StudentList from './components/StudentList';
@@ -28,32 +28,42 @@ function AddProfilePage() {
 }
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('token'));
+  // Initialize login state based on localStorage token presence
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  // Sync with localStorage token on mount
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setLoggedIn(!!token);
+  }, []);
+
+  // Function to handle logout and clear token
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+  };
 
   if (!loggedIn) {
-    // Auth routes
+    // Auth routes available only when logged out
     return (
       <Router>
         <Routes>
-          <Route
-            path="/login"
-            element={<LoginPage onLogin={() => setLoggedIn(true)} />}
-          />
+          <Route path="/login" element={<LoginPage onLogin={() => setLoggedIn(true)} />} />
           <Route
             path="/register"
-            element={
-              <RegisterPage onRegister={() => window.location.assign('/login')} />
-            }
+            element={<RegisterPage onRegister={() => window.location.assign('/login')} />}
           />
-          <Route path="*" element={<Navigate to="/register" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>
     );
   }
 
+  // Protected app routes available only when logged in
   return (
     <Router>
-      <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+      {/* Pass handleLogout to Navbar to allow user to logout */}
+      <Navbar loggedIn={loggedIn} setLoggedIn={handleLogout} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/add-profile" element={<AddProfilePage />} />
