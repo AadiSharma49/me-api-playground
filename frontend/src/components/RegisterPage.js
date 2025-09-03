@@ -7,7 +7,8 @@ function RegisterPage({ onRegister }) {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
+  // Remove trailing slash from API base URL if present
+  const API_BASE_URL = process.env.REACT_APP_API_URL?.replace(/\/$/, '');
 
   const handleRegister = async (e) => {
     e.preventDefault();
