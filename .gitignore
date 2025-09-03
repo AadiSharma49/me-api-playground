@@ -1,0 +1,15 @@
+# Node.js/Backend
+Backend/node_modules
+Backend/.env
+Backend/.env.production
+
+# React/Frontend
+frontend/node_modules
+frontend/build
+frontend/.env
+frontend/.env.production
+
+# General
+*.log
+.DS_Store
+.env*
