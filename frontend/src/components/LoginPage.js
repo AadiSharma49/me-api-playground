@@ -7,11 +7,13 @@ function LoginPage({ onLogin }) {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
+  // Remove trailing slash from API base URL if present
+  const API_BASE_URL = process.env.REACT_APP_API_URL?.replace(/\/$/, '');
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setMessage('');
     try {
-      const API_BASE_URL = process.env.REACT_APP_API_URL;
       const { data } = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password });
       localStorage.setItem('token', data.token);
       setMessage('Login success!');
