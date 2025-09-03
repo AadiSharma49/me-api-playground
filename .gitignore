@@ -1,15 +1,17 @@
-# Node.js/Backend
-Backend/node_modules
+# Ignore backend secrets
 Backend/.env
 Backend/.env.production
 
-# React/Frontend
-frontend/node_modules
-frontend/build
+# Ignore frontend env files
 frontend/.env
 frontend/.env.production
 
-# General
+# Ignore node_modules everywhere
+Backend/node_modules
+frontend/node_modules
+
+# Ignore build output
+frontend/build
+
+# General ignores
 *.log
-.DS_Store
-.env*

@@ -2,14 +2,22 @@ require('dotenv').config({ path: '.env.production' });
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
-app.use(cors());
+
+// Replace with your deployed frontend URL or * for all origins (not recommended for prod)
+const FRONTEND_URL = process.env.FRONTEND_URL || '*';
+
+app.use(cors({
+  origin: FRONTEND_URL,
+  methods: 'GET,POST,PUT,DELETE',
+}));
+
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
-const path = require('path');
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log('MongoDB Connected'))
@@ -21,20 +29,17 @@ app.get('/health', (req, res) => {
 
 const profileRoutes = require('./routes');
 const authRoutes = require('./routes/auth');
-
 app.use('/api', profileRoutes);
 app.use('/api/auth', authRoutes);
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-
 
 // Serve frontend static files from /frontend/build
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
 
-// For any other routes, serve index.html from frontend build (SPA support)
-app.get('*', (req, res) => {
+// Fix catch-all route to exclude /api paths
+app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', 'frontend', 'build', 'index.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
