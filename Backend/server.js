@@ -10,8 +10,8 @@ const app = express();
 const FRONTEND_URL = process.env.FRONTEND_URL || '*';
 
 app.use(cors({
-  origin: FRONTEND_URL,
-  methods: 'GET,POST,PUT,DELETE',
+  origin: 'https://me-api-playground-1-ab3c.onrender.com',
+  methods: ["GET", "POST", "PUT", "DELETE"],
 }));
 
 app.use(express.json());
